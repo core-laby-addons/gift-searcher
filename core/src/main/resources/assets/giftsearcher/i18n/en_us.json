@@ -3,6 +3,10 @@
     "settings": {
       "enabled": {
         "name": "Enabled"
+      },
+      "clear": {
+        "name": "Clear Gift's",
+        "text": "Clear"
       }
     }
   }
