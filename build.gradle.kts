@@ -15,7 +15,7 @@ labyMod {
         registerVersion(versions.toTypedArray()) {
             runs {
                 getByName("client") {
-                    devLogin = true
+                    //devLogin = true
                 }
             }
         }
@@ -26,7 +26,7 @@ labyMod {
         displayName = "Gift Searcher"
         author = "EinsJustin"
         description = "Example Description"
-        minecraftVersion = "*"
+        minecraftVersion = "1.8.9,1.21.4"
         version = rootProject.version.toString()
 
         addon("labyswaypoints", true)
