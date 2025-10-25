@@ -22,24 +22,24 @@ public class DefaultWaypointManager implements WaypointManager {
 
   @Override
   public void createWaypoint(float x, float y, float z) {
-    WaypointService service = Waypoints.getReferences().waypointService();
+    WaypointService service = Waypoints.references().waypointService();
     FloatVector3 location = new FloatVector3(x, y, z);
     if (this.locations.contains(location)) {
       return;
     }
     this.locations.add(location);
-    service.addWaypoint(new WaypointMeta(
+    service.add(new WaypointMeta(
         Component.text("Gift #" + ++this.giftCount),
         Color.YELLOW,
         WaypointType.SERVER_SESSION,
         location.copy().add(0.5f, 0, 0.5f),
         true,
-        service.actualWorld(),
-        service.actualServer(),
-        service.actualDimension() != null
-            ? service.actualDimension()
+        service.getSinglePlayerWorld(),
+        service.getServerAddress() == null ? "SINGLEPLAYER" : service.getServerAddress().toString(),
+        service.getDimension() != null
+            ? service.getDimension()
             : "labymod:unknown"
     ));
-    service.refreshWaypoints();
+    service.refresh();
   }
 }

@@ -39,14 +39,14 @@ public class DefaultGiftController implements GiftController {
                 );
         this.addGift(gift);
         if (gift.isClaimed()) {
-            WaypointService service = Waypoints.getReferences().waypointService();
-            service.removeWaypoints((waypoint) -> {
+            WaypointService service = Waypoints.references().waypointService();
+            service.remove((waypoint) -> {
                 DoubleVector3 position = waypoint.position();
                 return Math.floor(position.getX()) == gift.getX()
                         && Math.floor(position.getY()) == gift.getY()
                         && Math.floor(position.getZ()) == gift.getZ();
             });
-            service.refreshWaypoints();
+            service.refresh();
         }
     }
 
