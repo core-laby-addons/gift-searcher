@@ -23,7 +23,7 @@ public class GiftConfiguration extends AddonConfig {
   @MethodOrder(after = "enabled")
   @ButtonSetting
   public void clear() {
-    this.gifts.clear();
+    DefaultGiftController.gifts.clear();
   }
 
   @Override

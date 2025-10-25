@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import de.einsjustin.giftsearcher.GiftAddon;
 import de.einsjustin.giftsearcher.api.GiftData;
 import java.util.Optional;
+import java.util.UUID;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
@@ -24,13 +25,12 @@ public abstract class SkullBlockRendererMixin implements BlockEntityRenderer<Sku
   )
   private void on(SkullBlockEntity skullBlockEntity, float yaw, PoseStack poseStack, MultiBufferSource multiBufferSource, int light, int overlay, CallbackInfo ci) {
     ResolvableProfile ownerProfile = skullBlockEntity.getOwnerProfile();
-    if (ownerProfile == null) {
-      return;
-    }
-    Optional<String> name = ownerProfile.name();
-    if (name.isEmpty() || !name.get().equalsIgnoreCase("GommeHD")) {
-      return;
-    }
+    if (ownerProfile == null) return;
+    Optional<UUID> uuid = ownerProfile.id();
+    if(uuid.isEmpty()) return;
+    String currentServer = GiftAddon.getInstance().currentServer();
+    if(!GiftAddon.getInstance().headOwners().containsKey(currentServer)) return;
+    if(!GiftAddon.getInstance().headOwners().get(currentServer).contains(uuid.get().toString())) return;
 
     BlockPos blockPos = skullBlockEntity.getBlockPos();
     GiftData gift = new GiftData(blockPos.getX(), blockPos.getY(), blockPos.getZ());
@@ -40,16 +40,20 @@ public abstract class SkullBlockRendererMixin implements BlockEntityRenderer<Sku
 
   @Override
   public boolean shouldRenderOffScreen(SkullBlockEntity skullBlockEntity) {
-
+    String currentServer = GiftAddon.getInstance().currentServer();
+    if(!GiftAddon.getInstance().headOwners().containsKey(currentServer)) return true;
     ResolvableProfile ownerProfile = skullBlockEntity.getOwnerProfile();
     if (ownerProfile == null) {
       return BlockEntityRenderer.super.shouldRenderOffScreen(skullBlockEntity);
     }
-    Optional<String> name = ownerProfile.name();
-    if (name.isEmpty() || !name.get().equalsIgnoreCase("GommeHD")) {
+    Optional<UUID> uuid = ownerProfile.id();
+    if(uuid.isEmpty()) {
       return BlockEntityRenderer.super.shouldRenderOffScreen(skullBlockEntity);
     }
-
+    if (GiftAddon.getInstance().headOwners().get(currentServer).contains(uuid.get().toString())) {
+      return BlockEntityRenderer.super.shouldRenderOffScreen(skullBlockEntity);
+    }
     return true;
   }
+
 }
